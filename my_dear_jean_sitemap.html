@@ -1,0 +1,565 @@
+
+<style>
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8D5A3;
+    --gold-dark: #8B6914;
+  }
+  .site-header {
+    text-align: center;
+    padding: 2rem 0 1.5rem;
+    border-bottom: 0.5px solid var(--color-border-tertiary);
+    margin-bottom: 2rem;
+  }
+  .brand-tag {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold-dark);
+    background: #FBF6EB;
+    border: 0.5px solid var(--gold-light);
+    border-radius: 3px;
+    padding: 3px 10px;
+    margin-bottom: 12px;
+  }
+  .site-title {
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--color-text-primary);
+    margin: 0 0 4px;
+  }
+  .site-sub {
+    font-size: 13px;
+    color: var(--color-text-secondary);
+    margin: 0;
+  }
+  .nav-tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    border-bottom: 0.5px solid var(--color-border-tertiary);
+    padding-bottom: 0;
+  }
+  .nav-tab {
+    font-size: 13px;
+    color: var(--color-text-secondary);
+    padding: 7px 14px;
+    border-radius: 6px 6px 0 0;
+    cursor: pointer;
+    border: 0.5px solid transparent;
+    background: transparent;
+    margin-bottom: -0.5px;
+    transition: all .15s;
+    border-bottom: none;
+    position: relative;
+    bottom: -0.5px;
+  }
+  .nav-tab.active {
+    color: var(--color-text-primary);
+    background: var(--color-background-primary);
+    border-color: var(--color-border-tertiary);
+    border-bottom-color: var(--color-background-primary);
+    font-weight: 500;
+  }
+  .nav-tab:not(.active):hover {
+    color: var(--color-text-primary);
+    background: var(--color-background-secondary);
+  }
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  /* Page card */
+  .page-card {
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: var(--border-radius-lg);
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+  .page-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    cursor: pointer;
+    background: var(--color-background-primary);
+    user-select: none;
+  }
+  .page-header:hover { background: var(--color-background-secondary); }
+  .page-icon {
+    width: 30px; height: 30px;
+    border-radius: 6px;
+    background: #FBF6EB;
+    border: 0.5px solid var(--gold-light);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+    color: var(--gold-dark);
+  }
+  .page-meta { flex: 1; }
+  .page-name { font-size: 14px; font-weight: 500; color: var(--color-text-primary); margin: 0; }
+  .page-desc { font-size: 12px; color: var(--color-text-secondary); margin: 2px 0 0; }
+  .page-badge {
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+  }
+  .badge-primary { background: var(--color-background-info); color: var(--color-text-info); }
+  .badge-secondary { background: var(--color-background-secondary); color: var(--color-text-secondary); }
+  .badge-gold { background: #FBF6EB; color: var(--gold-dark); border: 0.5px solid var(--gold-light); }
+  .chevron { font-size: 12px; color: var(--color-text-tertiary); transition: transform .2s; }
+  .page-header.open .chevron { transform: rotate(90deg); }
+  .page-body {
+    display: none;
+    padding: 0 16px 14px;
+    border-top: 0.5px solid var(--color-border-tertiary);
+    background: var(--color-background-secondary);
+  }
+  .page-body.open { display: block; }
+  .section-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-text-tertiary);
+    margin: 14px 0 8px;
+  }
+  .content-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 8px;
+  }
+  .content-item {
+    background: var(--color-background-primary);
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: var(--border-radius-md);
+    padding: 10px 12px;
+  }
+  .content-item-title {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--color-text-primary);
+    margin: 0 0 3px;
+  }
+  .content-item-desc {
+    font-size: 11px;
+    color: var(--color-text-secondary);
+    margin: 0;
+    line-height: 1.5;
+  }
+  .highlight-box {
+    background: #FBF6EB;
+    border: 0.5px solid var(--gold-light);
+    border-radius: var(--border-radius-md);
+    padding: 10px 14px;
+    margin-top: 8px;
+    font-size: 12px;
+    color: var(--gold-dark);
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+  }
+  .source-tag {
+    display: inline-block;
+    font-size: 10px;
+    background: var(--color-background-secondary);
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: 3px;
+    padding: 1px 6px;
+    color: var(--color-text-tertiary);
+    margin-left: 6px;
+    font-style: normal;
+  }
+  .flow-list { list-style: none; padding: 0; margin: 0; }
+  .flow-list li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--color-text-secondary);
+    padding: 4px 0;
+    border-bottom: 0.5px solid var(--color-border-tertiary);
+  }
+  .flow-list li:last-child { border-bottom: none; }
+  .flow-num {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--color-background-secondary);
+    border: 0.5px solid var(--color-border-secondary);
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .copy-btn {
+    font-size: 11px;
+    color: var(--color-text-info);
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 2px 4px;
+    border-radius: 3px;
+  }
+  .copy-btn:hover { background: var(--color-background-info); }
+</style>
+
+<h2 class="sr-only">Site map and content plan for My Dear Jean luxury apartments website</h2>
+
+<div class="site-header">
+  <div class="brand-tag">Website Content Plan</div>
+  <h1 class="site-title">My Dear Jean — Labone, Accra</h1>
+  <p class="site-sub">Luxury Serviced Apartments · Site Map &amp; Content Brief for Developer Handoff</p>
+</div>
+
+<div class="nav-tabs">
+  <div class="nav-tab active" onclick="switchTab('sitemap',this)">Site Map</div>
+  <div class="nav-tab" onclick="switchTab('sections',this)">Section Details</div>
+  <div class="nav-tab" onclick="switchTab('assets',this)">Assets Needed</div>
+  <div class="nav-tab" onclick="switchTab('references',this)">References</div>
+</div>
+
+<!-- SITEMAP TAB -->
+<div class="panel active" id="tab-sitemap">
+
+  <!-- HOME -->
+  <div class="page-card">
+    <div class="page-header" onclick="togglePage(this)">
+      <div class="page-icon"><i class="ti ti-home" aria-hidden="true"></i></div>
+      <div class="page-meta">
+        <p class="page-name">01 — Home</p>
+        <p class="page-desc">Hero, intro, neighbourhood accolade, feature snapshot</p>
+      </div>
+      <span class="page-badge badge-primary">Primary landing</span>
+      <span class="chevron"><i class="ti ti-chevron-right" aria-hidden="true"></i></span>
+    </div>
+    <div class="page-body">
+      <p class="section-label">Sections on this page</p>
+      <div class="content-grid">
+        <div class="content-item"><p class="content-item-title">Full-screen hero</p><p class="content-item-desc">Cinematic video or image of the apartment / Labone. Tagline + "Explore" CTA.</p></div>
+        <div class="content-item"><p class="content-item-title">Neighbourhood accolade strip</p><p class="content-item-desc">"Labone ranked #10 coolest neighbourhood in the world — Time Out 2025" badge banner.</p></div>
+        <div class="content-item"><p class="content-item-title">Building intro</p><p class="content-item-desc">2–3 line brand statement. Tone: warm, understated luxury.</p></div>
+        <div class="content-item"><p class="content-item-title">Feature snapshot</p><p class="content-item-desc">3 icon tiles: Serviced Apartments · Prime Location · Concierge Living.</p></div>
+        <div class="content-item"><p class="content-item-title">Gallery preview</p><p class="content-item-desc">4–6 curated images with "View Gallery" link to full gallery page.</p></div>
+        <div class="content-item"><p class="content-item-title">Enquiry / Book CTA</p><p class="content-item-desc">Floating or sticky "Check Availability" button.</p></div>
+      </div>
+      <div class="highlight-box"><i class="ti ti-sparkles" style="font-size:14px;flex-shrink:0;margin-top:1px" aria-hidden="true"></i><span>Inspired by Dear Jean (Sea Point) hero layout — full-bleed image, minimal nav overlay, serif heading on dark background.</span></div>
+    </div>
+  </div>
+
+  <!-- APARTMENTS -->
+  <div class="page-card">
+    <div class="page-header" onclick="togglePage(this)">
+      <div class="page-icon"><i class="ti ti-building" aria-hidden="true"></i></div>
+      <div class="page-meta">
+        <p class="page-name">02 — The Apartments</p>
+        <p class="page-desc">Unit types, floor plans, amenities, pricing</p>
+      </div>
+      <span class="page-badge badge-primary">Core page</span>
+      <span class="chevron"><i class="ti ti-chevron-right" aria-hidden="true"></i></span>
+    </div>
+    <div class="page-body">
+      <p class="section-label">Sections on this page</p>
+      <div class="content-grid">
+        <div class="content-item"><p class="content-item-title">Unit type cards</p><p class="content-item-desc">Studio / 1-bed / 2-bed. Each with photo, sq. m, occupancy, key features.</p></div>
+        <div class="content-item"><p class="content-item-title">Floor plan viewer</p><p class="content-item-desc">Downloadable/interactive floor plans per unit type.</p></div>
+        <div class="content-item"><p class="content-item-title">Apartment features list</p><p class="content-item-desc">Fully furnished, kitchen, A/C, high-speed Wi-Fi, housekeeping, security.</p></div>
+        <div class="content-item"><p class="content-item-title">Building amenities</p><p class="content-item-desc">Pool, gym, rooftop, parking, concierge, generator backup — icon grid.</p></div>
+        <div class="content-item"><p class="content-item-title">Availability / pricing enquiry</p><p class="content-item-desc">Short-stay and long-stay options. "Request quote" form.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GALLERY -->
+  <div class="page-card">
+    <div class="page-header" onclick="togglePage(this)">
+      <div class="page-icon"><i class="ti ti-photo" aria-hidden="true"></i></div>
+      <div class="page-meta">
+        <p class="page-name">03 — Gallery</p>
+        <p class="page-desc">Photography across building, interiors, views, neighbourhood</p>
+      </div>
+      <span class="page-badge badge-secondary">Supporting page</span>
+      <span class="chevron"><i class="ti ti-chevron-right" aria-hidden="true"></i></span>
+    </div>
+    <div class="page-body">
+      <p class="section-label">Gallery categories</p>
+      <div class="content-grid">
+        <div class="content-item"><p class="content-item-title">Interiors</p><p class="content-item-desc">Living areas, kitchens, bedrooms, bathrooms.</p></div>
+        <div class="content-item"><p class="content-item-title">Building &amp; exteriors</p><p class="content-item-desc">Façade, lobby, rooftop, pool area.</p></div>
+        <div class="content-item"><p class="content-item-title">Views &amp; lifestyle</p><p class="content-item-desc">Skyline, sunsets, people in common spaces.</p></div>
+        <div class="content-item"><p class="content-item-title">Labone neighbourhood</p><p class="content-item-desc">Streets, restaurants, galleries, vibes.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NEIGHBOURHOOD -->
+  <div class="page-card">
+    <div class="page-header" onclick="togglePage(this)">
+      <div class="page-icon"><i class="ti ti-map-pin" aria-hidden="true"></i></div>
+      <div class="page-meta">
+        <p class="page-name">04 — Neighbourhood</p>
+        <p class="page-desc">Location story, local landmarks, the Labone coolest-neighbourhood feature</p>
+      </div>
+      <span class="page-badge badge-gold">★ Key differentiator</span>
+      <span class="chevron"><i class="ti ti-chevron-right" aria-hidden="true"></i></span>
+    </div>
+    <div class="page-body">
+      <p class="section-label">Sections on this page</p>
+      <div class="content-grid">
+        <div class="content-item"><p class="content-item-title">Headline accolade</p><p class="content-item-desc">Full-bleed editorial feature: "Labone — #10 Coolest Neighbourhood in the World, Time Out 2025."</p></div>
+        <div class="content-item"><p class="content-item-title">Neighbourhood story</p><p class="content-item-desc">Short editorial about Labone's evolution — bungalows → galleries, wine bars, design museums.</p></div>
+        <div class="content-item"><p class="content-item-title">Local landmarks map</p><p class="content-item-desc">Interactive pin map. Categories: Dining · Nightlife · Wellness · Culture · Shopping.</p></div>
+        <div class="content-item"><p class="content-item-title">Landmark cards</p><p class="content-item-desc">La Borracha, Vine, Brasa, Zen Garden, Berj Gallery, Limbo Museum, Labone Social Club, Brown Sugar, Mamba Padel — each with photo, category, distance.</p></div>
+        <div class="content-item"><p class="content-item-title">Connectivity</p><p class="content-item-desc">Distance to airport, Kotoka Int'l, Cantonments, Osu, hospitals, embassies.</p></div>
+      </div>
+      <div class="highlight-box"><i class="ti ti-award" style="font-size:14px;flex-shrink:0;margin-top:1px" aria-hidden="true"></i><span>Draw from Kass Towers local landmarks section structure. Draw from Signature GH location page for the map + category pin treatment. Feature the Time Out 2025 ranking prominently — this is a major credibility hook.</span></div>
+      <p class="section-label">Time Out Labone write-up — key quotes to reference</p>
+      <div class="content-item" style="margin-top:0">
+        <p class="content-item-desc">From the Time Out 2025 ranking: Labone described as a magnet for "arty professionals and expats," home to happy-hour pubs, galleries, wine bars, high-end shops, the new Limbo design &amp; architecture museum, and an "ever-buzzing nightlife." Was a sleepy residential area in 2008 — now one of Accra's most dynamic postcodes. <em class="source-tag">Source: timeout.com</em></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- EXPERIENCES -->
+  <div class="page-card">
+    <div class="page-header" onclick="togglePage(this)">
+      <div class="page-icon"><i class="ti ti-star" aria-hidden="true"></i></div>
+      <div class="page-meta">
+        <p class="page-name">05 — Experiences</p>
+        <p class="page-desc">Concierge lifestyle, services, what guests do</p>
+      </div>
+      <span class="page-badge badge-secondary">Supporting page</span>
+      <span class="chevron"><i class="ti ti-chevron-right" aria-hidden="true"></i></span>
+    </div>
+    <div class="page-body">
+      <p class="section-label">Sections on this page</p>
+      <div class="content-grid">
+        <div class="content-item"><p class="content-item-title">Concierge services</p><p class="content-item-desc">Airport transfers, restaurant bookings, in-apt grocery stocking, cleaning, business centre.</p></div>
+        <div class="content-item"><p class="content-item-title">A perfect day in Labone</p><p class="content-item-desc">Curated itinerary card — morning padel at Mamba, breakfast at D Café, Berj Gallery, waakye at Aunty Muni, Vidya bookstore, Brown Sugar dinner, Zen Garden.</p></div>
+        <div class="content-item"><p class="content-item-title">For business travellers</p><p class="content-item-desc">High-speed Wi-Fi, desk setup, co-working proximity, airport convenience.</p></div>
+        <div class="content-item"><p class="content-item-title">For leisure guests</p><p class="content-item-desc">Festival calendar (Homowo, Pa-Gya), beach access, cultural spots.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ABOUT -->
+  <div class="page-card">
+    <div class="page-header" onclick="togglePage(this)">
+      <div class="page-icon"><i class="ti ti-heart" aria-hidden="true"></i></div>
+      <div class="page-meta">
+        <p class="page-name">06 — About / Story</p>
+        <p class="page-desc">Brand story, vision, the name, the team</p>
+      </div>
+      <span class="page-badge badge-secondary">Brand page</span>
+      <span class="chevron"><i class="ti ti-chevron-right" aria-hidden="true"></i></span>
+    </div>
+    <div class="page-body">
+      <p class="section-label">Sections on this page</p>
+      <div class="content-grid">
+        <div class="content-item"><p class="content-item-title">Brand narrative</p><p class="content-item-desc">The story behind "My Dear Jean" — who is Jean? The warmth behind the name.</p></div>
+        <div class="content-item"><p class="content-item-title">Vision &amp; values</p><p class="content-item-desc">What luxury means here: home-like, curated, community-connected.</p></div>
+        <div class="content-item"><p class="content-item-title">The team</p><p class="content-item-desc">Founders / management bios with photos.</p></div>
+        <div class="content-item"><p class="content-item-title">Press mentions</p><p class="content-item-desc">Logos + links: Time Out, any Ghana press coverage.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOOK / CONTACT -->
+  <div class="page-card">
+    <div class="page-header" onclick="togglePage(this)">
+      <div class="page-icon"><i class="ti ti-calendar" aria-hidden="true"></i></div>
+      <div class="page-meta">
+        <p class="page-name">07 — Book / Contact</p>
+        <p class="page-desc">Enquiry form, availability, contact details</p>
+      </div>
+      <span class="page-badge badge-primary">Conversion page</span>
+      <span class="chevron"><i class="ti ti-chevron-right" aria-hidden="true"></i></span>
+    </div>
+    <div class="page-body">
+      <p class="section-label">Sections on this page</p>
+      <div class="content-grid">
+        <div class="content-item"><p class="content-item-title">Availability form</p><p class="content-item-desc">Check-in / check-out date picker, unit type selector, guest count, message.</p></div>
+        <div class="content-item"><p class="content-item-title">Stay types</p><p class="content-item-desc">Short-stay (nightly), extended stay (monthly), corporate lease.</p></div>
+        <div class="content-item"><p class="content-item-title">Contact details</p><p class="content-item-desc">Phone, WhatsApp, email, address (Labone, Accra).</p></div>
+        <div class="content-item"><p class="content-item-title">Embedded map</p><p class="content-item-desc">Google Maps embed showing building location in Labone.</p></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- SECTION DETAILS TAB -->
+<div class="panel" id="tab-sections">
+
+  <div class="page-card">
+    <div class="page-header" onclick="togglePage(this)">
+      <div class="page-icon"><i class="ti ti-award" aria-hidden="true"></i></div>
+      <div class="page-meta">
+        <p class="page-name">The Neighbourhood Accolade Section</p>
+        <p class="page-desc">This is your strongest differentiator — centre it</p>
+      </div>
+      <span class="page-badge badge-gold">High priority</span>
+      <span class="chevron"><i class="ti ti-chevron-right" aria-hidden="true"></i></span>
+    </div>
+    <div class="page-body">
+      <p class="section-label">Recommended treatment</p>
+      <ul class="flow-list">
+        <li><span class="flow-num">1</span>Full-width banner/section with Time Out logo and quote about Labone being ranked #10 globally.</li>
+        <li><span class="flow-num">2</span>Short editorial paragraph summarising Labone's rise — from sleepy bungalows to one of the world's most exciting postcodes.</li>
+        <li><span class="flow-num">3</span>Grid of 6–8 landmark cards (inspired by Kass Towers local landmarks style): name, category pill, distance from apartments, photo.</li>
+        <li><span class="flow-num">4</span>Interactive map (inspired by Signature GH) with filterable categories: Dining, Nightlife, Culture, Wellness, Shopping.</li>
+        <li><span class="flow-num">5</span>A "Perfect Day in Labone" editorial card — mirrors what Time Out published, adapted as a guest itinerary.</li>
+      </ul>
+      <p class="section-label">Landmark suggestions to include</p>
+      <div class="content-grid">
+        <div class="content-item"><p class="content-item-title">Zen Garden</p><p class="content-item-desc">Live music, tree canopy. Nightlife / Culture.</p></div>
+        <div class="content-item"><p class="content-item-title">La Borracha</p><p class="content-item-desc">Mexican cantina, Taco Tuesdays. Dining.</p></div>
+        <div class="content-item"><p class="content-item-title">Berj Art Gallery</p><p class="content-item-desc">Ghanaian contemporary art. Culture.</p></div>
+        <div class="content-item"><p class="content-item-title">Brasa</p><p class="content-item-desc">Grill restaurant. Dining.</p></div>
+        <div class="content-item"><p class="content-item-title">Vine</p><p class="content-item-desc">Local food spot. Dining.</p></div>
+        <div class="content-item"><p class="content-item-title">Limbo Museum</p><p class="content-item-desc">Design &amp; architecture, brutalist building. Culture.</p></div>
+        <div class="content-item"><p class="content-item-title">Mamba Padel Club</p><p class="content-item-desc">Sport &amp; wellness.</p></div>
+        <div class="content-item"><p class="content-item-title">Labone Social Club</p><p class="content-item-desc">Candle-making, community events. Lifestyle.</p></div>
+        <div class="content-item"><p class="content-item-title">Brown Sugar</p><p class="content-item-desc">Fufu, Ghanaian cuisine. Dining.</p></div>
+        <div class="content-item"><p class="content-item-title">Vidya Bookstore</p><p class="content-item-desc">Independent bookseller. Culture.</p></div>
+        <div class="content-item"><p class="content-item-title">D Café</p><p class="content-item-desc">Custard croissant. Breakfast.</p></div>
+        <div class="content-item"><p class="content-item-title">Aunty Muni</p><p class="content-item-desc">Famous waakye. Local food.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-card">
+    <div class="page-header" onclick="togglePage(this)">
+      <div class="page-icon"><i class="ti ti-layout" aria-hidden="true"></i></div>
+      <div class="page-meta">
+        <p class="page-name">Homepage Hero — Dear Jean Inspired</p>
+        <p class="page-desc">Aesthetic and copy direction</p>
+      </div>
+      <span class="page-badge badge-secondary">Design note</span>
+      <span class="chevron"><i class="ti ti-chevron-right" aria-hidden="true"></i></span>
+    </div>
+    <div class="page-body">
+      <p class="section-label">Design direction</p>
+      <ul class="flow-list">
+        <li><span class="flow-num">1</span>Full-bleed hero image or autoplay video — building exterior or rooftop view of Labone.</li>
+        <li><span class="flow-num">2</span>Minimal overlay nav — logo top left, 3–4 nav links top right, thin white text on dark.</li>
+        <li><span class="flow-num">3</span>Headline in elegant serif font, centred or left-aligned: e.g. "Home in the World's Coolest Neighbourhood."</li>
+        <li><span class="flow-num">4</span>One CTA button: "Explore Apartments" or "Check Availability."</li>
+        <li><span class="flow-num">5</span>Scroll arrow to next section.</li>
+      </ul>
+      <div class="highlight-box"><i class="ti ti-eye" style="font-size:14px;flex-shrink:0;margin-top:1px" aria-hidden="true"></i><span>Reference: dear-jean.co.za — clean luxury, serif type, high-contrast photography, minimal UI chrome. Avoid heavy graphic elements or flashy animations.</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ASSETS TAB -->
+<div class="panel" id="tab-assets">
+  <div class="page-card">
+    <div class="page-header" onclick="togglePage(this)">
+      <div class="page-icon"><i class="ti ti-camera" aria-hidden="true"></i></div>
+      <div class="page-meta">
+        <p class="page-name">Photography &amp; Video</p>
+        <p class="page-desc">What you need to shoot / source</p>
+      </div>
+      <span class="page-badge badge-primary">Action needed</span>
+      <span class="chevron"><i class="ti ti-chevron-right" aria-hidden="true"></i></span>
+    </div>
+    <div class="page-body">
+      <div class="content-grid">
+        <div class="content-item"><p class="content-item-title">Hero image / video</p><p class="content-item-desc">High-quality wide shot of building or Labone street. Sunset preferred for warmth.</p></div>
+        <div class="content-item"><p class="content-item-title">Interior shots</p><p class="content-item-desc">Each unit type: living room, bedroom, kitchen, bathroom. Natural light.</p></div>
+        <div class="content-item"><p class="content-item-title">Amenities</p><p class="content-item-desc">Pool, rooftop, lobby, gym (if applicable).</p></div>
+        <div class="content-item"><p class="content-item-title">Neighbourhood lifestyle</p><p class="content-item-desc">Labone street scenes, restaurant patios, Zen Garden, galleries.</p></div>
+        <div class="content-item"><p class="content-item-title">Aerial / drone</p><p class="content-item-desc">Building in context of Labone / Accra skyline.</p></div>
+        <div class="content-item"><p class="content-item-title">Floor plans</p><p class="content-item-desc">Clean architectural drawings per unit type. PDF + web-ready PNG.</p></div>
+      </div>
+    </div>
+  </div>
+  <div class="page-card">
+    <div class="page-header" onclick="togglePage(this)">
+      <div class="page-icon"><i class="ti ti-file-text" aria-hidden="true"></i></div>
+      <div class="page-meta">
+        <p class="page-name">Copy &amp; Content to Write</p>
+        <p class="page-desc">Text content you need to prepare before development</p>
+      </div>
+      <span class="page-badge badge-primary">Action needed</span>
+      <span class="chevron"><i class="ti ti-chevron-right" aria-hidden="true"></i></span>
+    </div>
+    <div class="page-body">
+      <ul class="flow-list">
+        <li><span class="flow-num">1</span>Homepage tagline and 2-sentence brand intro</li>
+        <li><span class="flow-num">2</span>Unit descriptions for each apartment type (Studio, 1-bed, 2-bed)</li>
+        <li><span class="flow-num">3</span>Amenities and features list (confirmed details)</li>
+        <li><span class="flow-num">4</span>Neighbourhood editorial piece (300–400 words) about Labone</li>
+        <li><span class="flow-num">5</span>"A Perfect Day in Labone" itinerary</li>
+        <li><span class="flow-num">6</span>Brand story / About page (200–300 words)</li>
+        <li><span class="flow-num">7</span>SEO meta titles and descriptions for each page</li>
+        <li><span class="flow-num">8</span>Contact details, WhatsApp number, address</li>
+        <li><span class="flow-num">9</span>Landmark descriptions (1–2 sentences each)</li>
+        <li><span class="flow-num">10</span>Pricing / stay type information</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- REFERENCES TAB -->
+<div class="panel" id="tab-references">
+  <div class="page-card">
+    <div class="page-header" onclick="togglePage(this)">
+      <div class="page-icon"><i class="ti ti-link" aria-hidden="true"></i></div>
+      <div class="page-meta">
+        <p class="page-name">Reference Sites &amp; Inspirations</p>
+        <p class="page-desc">What to share with your developer</p>
+      </div>
+      <span class="page-badge badge-secondary">Developer brief</span>
+      <span class="chevron"><i class="ti ti-chevron-right" aria-hidden="true"></i></span>
+    </div>
+    <div class="page-body">
+      <div class="content-grid">
+        <div class="content-item">
+          <p class="content-item-title">dear-jean.co.za</p>
+          <p class="content-item-desc">Overall aesthetic: full-bleed hero, serif type, luxury minimal. Emulate page structure and visual tone.</p>
+        </div>
+        <div class="content-item">
+          <p class="content-item-title">signaturegh.com/location</p>
+          <p class="content-item-desc">Location page with interactive map and proximity data. Reference for the Neighbourhood page layout.</p>
+        </div>
+        <div class="content-item">
+          <p class="content-item-title">kasstowers.com</p>
+          <p class="content-item-desc">Local landmarks section — card-based landmark grid with photos, categories, distances. Emulate for the neighbourhood landmarks section.</p>
+        </div>
+        <div class="content-item">
+          <p class="content-item-title">timeout.com — Labone entry</p>
+          <p class="content-item-desc">Use as editorial source for neighbourhood story and to surface the #10 ranking. Link to full article from site.</p>
+        </div>
+      </div>
+      <p class="section-label">Key instruction for developer</p>
+      <ul class="flow-list">
+        <li><span class="flow-num">✦</span>Aesthetic = Dear Jean (Sea Point). Clean, luxury, serif headlines, dark photography.</li>
+        <li><span class="flow-num">✦</span>Location page = Signature GH map treatment + Kass Towers landmark cards.</li>
+        <li><span class="flow-num">✦</span>The Time Out Labone ranking is a central marketing asset — it should appear on homepage AND neighbourhood page prominently.</li>
+        <li><span class="flow-num">✦</span>Mobile-first. Many Accra users browse on mobile.</li>
+        <li><span class="flow-num">✦</span>WhatsApp enquiry integration (common and expected in Ghana market).</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script>
+function switchTab(id, el) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  el.classList.add('active');
+}
+function togglePage(header) {
+  const body = header.nextElementSibling;
+  const isOpen = body.classList.contains('open');
+  header.classList.toggle('open', !isOpen);
+  body.classList.toggle('open', !isOpen);
+}
+</script>
